@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Order Form</title>
+</head>
+<body>
+    <h2>Car Order Form</h2>
+    <form action="/submit" method="post">
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br><br>
+
+        <label>Car model:</label><br>
+        <select name="model">
+            <option value="Sedan">Sedan</option>
+            <option value="SUV">SUV</option>
+            <option value="Truck">Truck</option>
+        </select><br><br>
+
+        <label>Color:</label><br>
+        <select name="color">
+            <option value="Red">Red</option>
+            <option value="Blue">Blue</option>
+            <option value="White">White</option>
+        </select><br><br>
+
+        <button type="submit">Submit Order</button>
+    </form>
+</body>
+</html>
