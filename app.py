@@ -1,14 +1,16 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-import os
 
 app = Flask(__name__)
 
-# --- Database setup ---
-base_dir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(base_dir, 'orders.db')
+# --- Persistent SQLite folder on Render ---
+BASE_DIR = '/opt/render/project/data'
+os.makedirs(BASE_DIR, exist_ok=True)
+
+DB_PATH = os.path.join(BASE_DIR, 'orders.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-print("Database path:", app.config['SQLALCHEMY_DATABASE_URI'])
 db = SQLAlchemy(app)
 
 # --- Database model ---
@@ -18,7 +20,7 @@ class Order(db.Model):
     model = db.Column(db.String(50))
     color = db.Column(db.String(50))
 
-# --- Create the database file if not exists ---
+# --- Create database if it doesn't exist ---
 with app.app_context():
     db.create_all()
 
@@ -45,6 +47,11 @@ def thank_you():
 def admin():
     orders = Order.query.all()
     return render_template('admin.html', orders=orders)
+
+# --- Debug route to check database path ---
+@app.route('/db_path')
+def db_path():
+    return DB_PATH
 
 if __name__ == '__main__':
     app.run(debug=True)
